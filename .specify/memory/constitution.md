@@ -1,50 +1,81 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+=== SYNC IMPACT REPORT ===
+Version Change: 0.0.0 → 1.0.0 (Initial constitution)
+Modified Principles: N/A (new)
+Added Sections:
+  - Core Principles (3): Speed First, MVP Always, Embrace the Mess
+  - Development Philosophy
+  - Governance
+Removed Sections: All template placeholders replaced
+Templates Updated:
+  - .specify/templates/plan-template.md ✅ (aligned - Constitution Check is generic)
+  - .specify/templates/spec-template.md ✅ (aligned - prioritized user stories support MVP approach)
+  - .specify/templates/tasks-template.md ✅ (aligned - MVP/incremental delivery matches constitution)
+Follow-up TODOs: None
+========================
+-->
+
+# Auto-Turkey Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Speed First
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Ship working code fast. Perfection is the enemy of done.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+- Favor quick iteration over upfront design
+- Working software NOW beats perfect software LATER
+- If in doubt, build the simplest thing that could possibly work
+- Refactoring is cheap; not shipping is expensive
+- Skip ceremony that doesn't directly produce value
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale**: This is a personal project with a single developer. The fastest feedback loop is seeing it run.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. MVP Always
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Deliver the smallest slice of value as early as possible.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Every feature starts as its most minimal viable form
+- One working path beats three half-finished paths
+- MUST be able to demo/use something after each work session
+- Cut scope aggressively; add back later if needed
+- "Later" is a valid answer for non-critical features
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**Rationale**: Early value enables course correction. Shipping partial but working is better than complete but stuck.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### III. Embrace the Mess
+
+Technical debt is a tool, not a sin.
+
+- TODO comments are acceptable breadcrumbs
+- Hardcoded values are fine until they're not
+- Copy-paste now, abstract later (if ever)
+- Tests are welcome but NOT mandatory gates
+- Documentation follows code, never blocks it
+
+**Rationale**: Solo projects die from over-engineering, not from messy code. Clean up when it hurts, not before.
+
+## Development Philosophy
+
+**Build → Demo → Learn → Repeat**
+
+1. Start with the user-facing outcome you want
+2. Build the fastest path to that outcome
+3. Run it, see it work (or break)
+4. Adjust based on what you learned
+5. Repeat
+
+**When Stuck**: If something takes more than 30 minutes of research, build a throwaway spike. Delete it and rebuild with knowledge.
+
+**Breaking Changes**: Totally fine. This is pre-1.0 territory. Migrate when necessary, not preemptively.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution is a reminder of intent, not a legal document.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+- Principles guide decisions but don't block shipping
+- Amend freely when the project's needs change
+- No approval process required—just update and note why
+- If a principle causes friction, the principle is wrong
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-18 | **Last Amended**: 2025-12-18

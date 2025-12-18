@@ -29,9 +29,11 @@
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+*Quick sanity check—not a blocker, just a reminder.*
 
-[Gates determined based on constitution file]
+- [ ] **Speed First**: Am I building the simplest thing that works?
+- [ ] **MVP Always**: Can I ship something usable after this work session?
+- [ ] **Embrace the Mess**: Am I over-engineering? (If yes, cut scope.)
 
 ## Project Structure
 
