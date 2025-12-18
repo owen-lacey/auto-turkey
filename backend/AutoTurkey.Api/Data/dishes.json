@@ -1,0 +1,167 @@
+{
+  "dinnerTime": "2024-12-25T15:00:00",
+  "machines": [
+    {
+      "name": "Kitchen Oven",
+      "maxCapacity": 2
+    },
+    {
+      "name": "Utility Oven",
+      "maxCapacity": 2
+    },
+    {
+      "name": "Hob",
+      "maxCapacity": 4
+    },
+    {
+      "name": "Chef",
+      "maxCapacity": 1
+    }
+  ],
+  "dishes": [
+    {
+      "name": "Turkey",
+      "recipeUrl": "https://www.bbcgoodfood.com/recipes/perfect-roast-turkey",
+      "prepTasks": [
+        {
+          "name": "prep",
+          "description": "Remove giblets, pat dry, season under skin with butter and herbs"
+        }
+      ],
+      "scheduledTasks": [
+        {
+          "name": "roast",
+          "durationMinutes": 180,
+          "machine": "Kitchen Oven"
+        },
+        {
+          "name": "rest",
+          "durationMinutes": 30,
+          "machine": null
+        }
+      ]
+    },
+    {
+      "name": "Roast Potatoes",
+      "recipeUrl": "https://www.bbcgoodfood.com/recipes/ultimate-roast-potatoes",
+      "prepTasks": [
+        {
+          "name": "peel",
+          "description": "Peel and quarter potatoes, rinse and drain"
+        }
+      ],
+      "scheduledTasks": [
+        {
+          "name": "parboil",
+          "durationMinutes": 10,
+          "machine": "Hob"
+        },
+        {
+          "name": "roast",
+          "durationMinutes": 60,
+          "machine": "Utility Oven"
+        }
+      ]
+    },
+    {
+      "name": "Brussels Sprouts",
+      "recipeUrl": "https://www.bbcgoodfood.com/recipes/best-ever-brussels-sprouts",
+      "prepTasks": [
+        {
+          "name": "trim",
+          "description": "Trim and halve sprouts, remove outer leaves"
+        }
+      ],
+      "scheduledTasks": [
+        {
+          "name": "pan-fry",
+          "durationMinutes": 15,
+          "machine": "Hob"
+        }
+      ]
+    },
+    {
+      "name": "Carrots & Parsnips",
+      "prepTasks": [
+        {
+          "name": "peel",
+          "description": "Peel and cut into batons"
+        }
+      ],
+      "scheduledTasks": [
+        {
+          "name": "roast",
+          "durationMinutes": 45,
+          "machine": "Utility Oven"
+        }
+      ]
+    },
+    {
+      "name": "Pigs in Blankets",
+      "prepTasks": [
+        {
+          "name": "wrap",
+          "description": "Wrap sausages in bacon rashers"
+        }
+      ],
+      "scheduledTasks": [
+        {
+          "name": "roast",
+          "durationMinutes": 30,
+          "machine": "Kitchen Oven"
+        }
+      ]
+    },
+    {
+      "name": "Stuffing",
+      "recipeUrl": "https://www.bbcgoodfood.com/recipes/chestnut-stuffing",
+      "prepTasks": [
+        {
+          "name": "make",
+          "description": "Chop onion, mix with sausage meat, breadcrumbs and herbs"
+        }
+      ],
+      "scheduledTasks": [
+        {
+          "name": "bake",
+          "durationMinutes": 35,
+          "machine": "Utility Oven"
+        }
+      ]
+    },
+    {
+      "name": "Gravy",
+      "recipeUrl": "https://www.bbcgoodfood.com/recipes/make-ahead-gravy",
+      "prepTasks": [],
+      "scheduledTasks": [
+        {
+          "name": "make",
+          "durationMinutes": 15,
+          "machine": "Hob"
+        }
+      ]
+    },
+    {
+      "name": "Bread Sauce",
+      "recipeUrl": "https://www.bbcgoodfood.com/recipes/bread-sauce",
+      "prepTasks": [],
+      "scheduledTasks": [
+        {
+          "name": "simmer",
+          "durationMinutes": 20,
+          "machine": "Hob"
+        }
+      ]
+    },
+    {
+      "name": "Cranberry Sauce",
+      "prepTasks": [
+        {
+          "name": "make",
+          "description": "Can be made ahead - cranberries, sugar, orange zest"
+        }
+      ],
+      "scheduledTasks": []
+    }
+  ]
+}
