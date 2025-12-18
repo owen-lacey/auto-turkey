@@ -18,7 +18,7 @@ export function GanttChart({ schedule, onTaskClick }: GanttChartProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const dinnerTime = new Date(schedule.dinnerTime);
+  const dinnerTime = useMemo(() => new Date(schedule.dinnerTime), [schedule.dinnerTime]);
 
   // Calculate time range: find earliest task start, end at dinner time
   const timeRange = useMemo(() => {
