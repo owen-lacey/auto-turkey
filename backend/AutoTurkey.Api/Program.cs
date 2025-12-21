@@ -42,5 +42,6 @@ app.MapGet("/", () => "Auto-Turkey API is running!");
 app.MapConfigEndpoints();
 app.MapScheduleEndpoints();
 app.MapTasksEndpoints();
+app.MapSettingsEndpoints();
 
 app.Run();

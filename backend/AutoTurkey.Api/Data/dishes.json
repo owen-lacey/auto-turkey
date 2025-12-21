@@ -1,5 +1,4 @@
 {
-  "dinnerTime": "2024-12-25T15:00:00",
   "machines": [
     {
       "name": "Kitchen Oven",
@@ -21,17 +20,54 @@
   "dishes": [
     {
       "name": "Turkey",
-      "recipeUrl": "https://www.bbcgoodfood.com/recipes/perfect-roast-turkey",
       "prepTasks": [
         {
           "name": "prep",
-          "description": "Remove giblets, pat dry, season under skin with butter and herbs"
+          "description": "Remove giblets, pat dry, season under skin with butter and herbs",
+          "when": "Morning"
         }
       ],
       "scheduledTasks": [
         {
           "name": "roast",
           "durationMinutes": 180,
+          "machine": "Kitchen Oven"
+        },
+        {
+          "name": "make stock",
+          "durationMinutes": 30,
+          "machine": "Hob"
+        },
+        {
+          "name": "rest",
+          "durationMinutes": 30,
+          "machine": null
+        }
+      ]
+    },
+    {
+      "name": "Gammon",
+      "prepTasks": [
+        {
+          "name": "prep",
+          "description": "Prepare aromatics",
+          "when": "Morning"
+        }
+      ],
+      "scheduledTasks": [
+        {
+          "name": "boil",
+          "durationMinutes": 20,
+          "machine": "Hob"
+        },
+        {
+          "name": "roast",
+          "durationMinutes": 90,
+          "machine": "Kitchen Oven"
+        },
+        {
+          "name": "glaze",
+          "durationMinutes": 15,
           "machine": "Kitchen Oven"
         },
         {
@@ -42,12 +78,32 @@
       ]
     },
     {
+      "name": "Vegan main",
+      "scheduledTasks": [
+        {
+          "name": "roast",
+          "durationMinutes": 60,
+          "machine": "Kitchen Oven"
+        }
+      ]
+    },
+    {
+      "name": "Veggie stock",
+      "scheduledTasks": [
+        {
+          "name": "make",
+          "durationMinutes": 30,
+          "machine": "Hob"
+        }
+      ]
+    },
+    {
       "name": "Roast Potatoes",
-      "recipeUrl": "https://www.bbcgoodfood.com/recipes/ultimate-roast-potatoes",
       "prepTasks": [
         {
           "name": "peel",
-          "description": "Peel and quarter potatoes, rinse and drain"
+          "description": "Peel and quarter potatoes, rinse and drain",
+          "when": "Morning"
         }
       ],
       "scheduledTasks": [
@@ -65,17 +121,22 @@
     },
     {
       "name": "Brussels Sprouts",
-      "recipeUrl": "https://www.bbcgoodfood.com/recipes/best-ever-brussels-sprouts",
       "prepTasks": [
         {
           "name": "trim",
-          "description": "Trim and halve sprouts, remove outer leaves"
+          "description": "Trim and halve sprouts, remove outer leaves",
+          "when": "Morning"
         }
       ],
       "scheduledTasks": [
         {
+          "name": "boil",
+          "durationMinutes": 10,
+          "machine": "Hob"
+        },
+        {
           "name": "pan-fry",
-          "durationMinutes": 15,
+          "durationMinutes": 20,
           "machine": "Hob"
         }
       ]
@@ -85,7 +146,8 @@
       "prepTasks": [
         {
           "name": "peel",
-          "description": "Peel and cut into batons"
+          "description": "Peel and cut into batons",
+          "when": "Morning"
         }
       ],
       "scheduledTasks": [
@@ -101,55 +163,62 @@
       "prepTasks": [
         {
           "name": "wrap",
-          "description": "Wrap sausages in bacon rashers"
+          "description": "Wrap sausages in bacon rashers",
+          "when": "BeforeDay"
         }
       ],
       "scheduledTasks": [
         {
           "name": "roast",
-          "durationMinutes": 30,
+          "durationMinutes": 20,
           "machine": "Kitchen Oven"
-        }
-      ]
-    },
-    {
-      "name": "Stuffing",
-      "recipeUrl": "https://www.bbcgoodfood.com/recipes/chestnut-stuffing",
-      "prepTasks": [
+        },
         {
-          "name": "make",
-          "description": "Chop onion, mix with sausage meat, breadcrumbs and herbs"
-        }
-      ],
-      "scheduledTasks": [
-        {
-          "name": "bake",
-          "durationMinutes": 35,
+          "name": "glaze",
+          "durationMinutes": 15,
           "machine": "Utility Oven"
         }
       ]
     },
     {
-      "name": "Gravy",
-      "recipeUrl": "https://www.bbcgoodfood.com/recipes/make-ahead-gravy",
-      "prepTasks": [],
+      "name": "Vegan pigs in Blankets",
       "scheduledTasks": [
         {
+          "name": "roast",
+          "durationMinutes": 30,
+          "machine": "Utility Oven"
+        }
+      ]
+    },
+    {
+      "name": "Stuffing",
+      "recipeUrl": "https://www.bbcgoodfood.com/recipes/chestnut-bacon-cranberry-stuffing",
+      "prepTasks": [
+        {
           "name": "make",
-          "durationMinutes": 15,
-          "machine": "Hob"
+          "description": "Can be made ahead",
+          "when": "BeforeDay"
+        }
+      ]
+    },
+    {
+      "name": "Vegan stuffing",
+      "prepTasks": [
+        {
+          "name": "make",
+          "description": "Can be made ahead",
+          "when": "BeforeDay"
         }
       ]
     },
     {
       "name": "Bread Sauce",
-      "recipeUrl": "https://www.bbcgoodfood.com/recipes/bread-sauce",
-      "prepTasks": [],
-      "scheduledTasks": [
+      "recipeUrl": "https://www.bbcgoodfood.com/recipes/bread-sauce-0",
+      "prepTasks": [
         {
-          "name": "simmer",
-          "durationMinutes": 20,
-          "machine": "Hob"
+          "name": "make",
+          "description": "Can be made ahead",
+          "when": "BeforeDay"
         }
       ]
     },
@@ -158,10 +227,47 @@
       "prepTasks": [
         {
           "name": "make",
-          "description": "Can be made ahead - cranberries, sugar, orange zest"
+          "description": "Cranberries, sugar, orange zest - can be made ahead",
+          "when": "BeforeDay"
+        }
+      ]
+    },
+    {
+      "name": "Cheesy veg",
+      "scheduledTasks": [
+        {
+          "name": "roast",
+          "durationMinutes": 20,
+          "machine": "Utility Oven"
+        },
+        {
+          "name": "make-bechamel",
+          "durationMinutes": 10,
+          "machine": "Hob"
+        },
+        {
+          "name": "grill",
+          "durationMinutes": 15,
+          "machine": "Chef"
+        }
+      ]
+    },
+    {
+      "name": "Yorkshire Pudding",
+      "prepTasks": [
+        {
+          "name": "make-batter",
+          "description": "Can be made ahead",
+          "when": "BeforeDay"
         }
       ],
-      "scheduledTasks": []
+      "scheduledTasks": [
+        {
+          "name": "cook",
+          "durationMinutes": 20,
+          "machine": "Utility Oven"
+        }
+      ]
     }
   ]
 }

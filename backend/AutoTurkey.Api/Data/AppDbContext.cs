@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Schedule> Schedules => Set<Schedule>();
     public DbSet<ScheduledTaskInstance> ScheduledTasks => Set<ScheduledTaskInstance>();
     public DbSet<PrepTaskInstance> PrepTasks => Set<PrepTaskInstance>();
+    public DbSet<Setting> Settings => Set<Setting>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,6 +25,9 @@ public class AppDbContext : DbContext
             .HasMany(s => s.PrepTasks)
             .WithOne(t => t.Schedule)
             .HasForeignKey(t => t.ScheduleId);
+
+        modelBuilder.Entity<Setting>()
+            .HasIndex(s => s.Key)
+            .IsUnique();
     }
 }
-

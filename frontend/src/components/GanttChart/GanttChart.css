@@ -78,14 +78,12 @@
 
 .task-block {
   position: absolute;
-  top: 6px;
-  height: 36px;
-  background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 8px;
+  padding-left: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -102,10 +100,21 @@
   background: linear-gradient(135deg, #3d4451 0%, #484f58 100%);
 }
 
+.task-block.highlighted {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 2px #58a6ff, 0 6px 12px rgba(88, 166, 255, 0.3);
+  z-index: 5;
+}
+
+.task-block.highlighted.completed {
+  box-shadow: 0 0 0 2px #6e7681, 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
 .task-label {
   font-size: 0.75rem;
   font-weight: 500;
   color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -166,5 +175,151 @@
   border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Task Popover */
+.popover-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+.task-popover {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #21262d;
+  border: 1px solid #3d4451;
+  border-radius: 12px;
+  padding: 1.25rem;
+  min-width: 320px;
+  max-width: 400px;
+  z-index: 101;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+}
+
+.popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.popover-dish {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #58a6ff;
+  background: rgba(88, 166, 255, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.popover-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  font-size: 1.25rem;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.popover-close:hover {
+  background: #30363d;
+  color: #c9d1d9;
+}
+
+.popover-task-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #f0f6fc;
+  margin: 0 0 1rem 0;
+}
+
+.popover-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #161b22;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.popover-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-label {
+  font-size: 0.8125rem;
+  color: #8b949e;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #c9d1d9;
+  font-variant-numeric: tabular-nums;
+}
+
+.popover-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.popover-btn {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  text-decoration: none;
+}
+
+.popover-btn-primary {
+  background: #238636;
+  color: #ffffff;
+}
+
+.popover-btn-primary:hover {
+  background: #2ea043;
+}
+
+.popover-btn-secondary {
+  background: #30363d;
+  color: #c9d1d9;
+}
+
+.popover-btn-secondary:hover {
+  background: #3d4451;
+}
+
+.popover-btn-undo {
+  background: #30363d;
+  color: #f0883e;
+}
+
+.popover-btn-undo:hover {
+  background: #3d4451;
 }
 

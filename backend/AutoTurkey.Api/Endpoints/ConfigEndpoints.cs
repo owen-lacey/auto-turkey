@@ -11,7 +11,6 @@ public static class ConfigEndpoints
             var config = configLoader.LoadConfig();
             return Results.Ok(new
             {
-                dinnerTime = config.DinnerTime,
                 machines = config.Machines.Select(m => new
                 {
                     name = m.Name,
@@ -35,6 +34,21 @@ public static class ConfigEndpoints
                 })
             });
         });
+
+        app.MapGet("/api/config/total-duration", (ScheduleOptimizer optimizer) =>
+        {
+            var totalMinutes = optimizer.GetTotalCookingDuration();
+            var hours = totalMinutes / 60;
+            var minutes = totalMinutes % 60;
+            var formatted = hours > 0 
+                ? $"{hours}h {minutes}m" 
+                : $"{minutes}m";
+            
+            return Results.Ok(new
+            {
+                totalMinutes,
+                formatted
+            });
+        });
     }
 }
-

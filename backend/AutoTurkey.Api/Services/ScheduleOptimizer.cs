@@ -12,10 +12,9 @@ public class ScheduleOptimizer
         _configLoader = configLoader;
     }
 
-    public ScheduleResult GenerateSchedule()
+    public ScheduleResult GenerateSchedule(DateTime dinnerTime)
     {
         var config = _configLoader.LoadConfig();
-        var dinnerTime = config.DinnerTime;
         
         // Calculate horizon in minutes - work backwards from dinner
         // Find total time needed (max possible is sum of all task durations)
@@ -135,18 +134,14 @@ public class ScheduleOptimizer
             model.Add(task.End <= horizon);
         }
         
-        // Objective: Minimize the makespan (latest end time among all tasks)
-        // But actually we want to push things as late as possible (closer to dinner)
-        // So minimize the earliest start time (push everything to the right)
+        // Objective: Push tasks as late as possible (closest to dinner time)
+        // By maximizing the earliest start time, we push all tasks toward the end of the horizon
         var allStarts = tasks.Select(t => t.Start).ToArray();
-        var allEnds = tasks.Select(t => t.End).ToArray();
         
-        var makespan = model.NewIntVar(0, horizon, "makespan");
-        model.AddMaxEquality(makespan, allEnds);
+        var earliestStart = model.NewIntVar(0, horizon, "earliestStart");
+        model.AddMinEquality(earliestStart, allStarts);
         
-        // We want to finish exactly at dinner time, so minimize (horizon - makespan)
-        // which is equivalent to maximizing makespan (pushing tasks to finish as late as possible)
-        model.Maximize(makespan);
+        model.Maximize(earliestStart);
         
         // Solve
         var solver = new CpSolver();
@@ -186,7 +181,8 @@ public class ScheduleOptimizer
             {
                 DishName = d.Name,
                 TaskName = p.Name,
-                Description = p.Description
+                Description = p.Description,
+                When = p.When
             }))
             .ToList();
         
@@ -196,6 +192,18 @@ public class ScheduleOptimizer
             ScheduledTasks = scheduledTasks,
             PrepTasks = prepTasks
         };
+    }
+
+    /// <summary>
+    /// Calculates the total cooking duration in minutes based on the configured dishes.
+    /// This is the minimum time needed from start to dinner.
+    /// </summary>
+    public int GetTotalCookingDuration()
+    {
+        var config = _configLoader.LoadConfig();
+        return config.Dishes
+            .SelectMany(d => d.ScheduledTasks)
+            .Sum(t => t.DurationMinutes);
     }
     
     private class TaskVar
@@ -231,5 +239,5 @@ public class PrepTaskResult
     public string DishName { get; set; } = "";
     public string TaskName { get; set; } = "";
     public string? Description { get; set; }
+    public PrepTaskWhen When { get; set; }
 }
-

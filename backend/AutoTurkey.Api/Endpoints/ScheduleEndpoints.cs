@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using AutoTurkey.Api.Data;
 using AutoTurkey.Api.Models;
+using AutoTurkey.Api.Models.Config;
 using AutoTurkey.Api.Services;
 
 namespace AutoTurkey.Api.Endpoints;
@@ -42,6 +43,7 @@ public static class ScheduleEndpoints
                     dishName = p.DishName,
                     taskName = p.TaskName,
                     description = p.Description,
+                    when = p.When.ToString(),
                     recipeUrl = recipeUrls.GetValueOrDefault(p.DishName),
                     isComplete = p.IsComplete
                 }),
@@ -59,10 +61,23 @@ public static class ScheduleEndpoints
             });
         });
 
-        app.MapPost("/api/schedule", async (AppDbContext db, ScheduleOptimizer optimizer, ConfigLoader configLoader) =>
+        app.MapPost("/api/schedule", async (AppDbContext db, ScheduleOptimizer optimizer, ConfigLoader configLoader, GenerateScheduleRequest? request) =>
         {
+            // Determine dinner time: from request, or default to now + cooking duration
+            DateTime dinnerTime;
+            if (request?.DinnerTime != null)
+            {
+                dinnerTime = request.DinnerTime.Value;
+            }
+            else
+            {
+                // Default: now + total cooking duration
+                var totalMinutes = optimizer.GetTotalCookingDuration();
+                dinnerTime = DateTime.Now.AddMinutes(totalMinutes);
+            }
+
             // Generate optimized schedule
-            var result = optimizer.GenerateSchedule();
+            var result = optimizer.GenerateSchedule(dinnerTime);
             
             // Create schedule entity
             var schedule = new Schedule
@@ -93,6 +108,7 @@ public static class ScheduleEndpoints
                     DishName = prep.DishName,
                     TaskName = prep.TaskName,
                     Description = prep.Description,
+                    When = prep.When,
                     IsComplete = false
                 });
             }
@@ -118,6 +134,7 @@ public static class ScheduleEndpoints
                     dishName = p.DishName,
                     taskName = p.TaskName,
                     description = p.Description,
+                    when = p.When.ToString(),
                     recipeUrl = recipeUrls.GetValueOrDefault(p.DishName),
                     isComplete = p.IsComplete
                 }),
@@ -137,3 +154,4 @@ public static class ScheduleEndpoints
     }
 }
 
+public record GenerateScheduleRequest(DateTime? DinnerTime);

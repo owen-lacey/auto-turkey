@@ -3,11 +3,14 @@ export interface Machine {
   maxCapacity: number;
 }
 
+export type PrepTaskWhen = 'BeforeDay' | 'Morning';
+
 export interface PrepTask {
   id: number;
   dishName: string;
   taskName: string;
   description?: string;
+  when: PrepTaskWhen;
   recipeUrl?: string;
   isComplete: boolean;
 }
@@ -32,7 +35,6 @@ export interface Schedule {
 }
 
 export interface ConfigResponse {
-  dinnerTime: string;
   machines: Machine[];
   dishes: DishConfig[];
 }
@@ -47,6 +49,7 @@ export interface DishConfig {
 export interface PrepTaskConfig {
   name: string;
   description?: string;
+  when?: PrepTaskWhen;
 }
 
 export interface ScheduledTaskConfig {
@@ -55,3 +58,11 @@ export interface ScheduledTaskConfig {
   machine?: string;
 }
 
+export interface TotalDurationResponse {
+  totalMinutes: number;
+  formatted: string;
+}
+
+export interface DinnerTimeResponse {
+  dinnerTime: string | null;
+}

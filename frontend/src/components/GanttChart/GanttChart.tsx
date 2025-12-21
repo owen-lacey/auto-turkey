@@ -1,22 +1,17 @@
-import { useMemo, useState, useEffect } from 'react';
-import type { Schedule, ScheduledTask } from '../../types';
+import { useMemo, useState } from 'react';
+import type { Schedule } from '../../types';
 import { MachineRow } from './MachineRow';
 import { TimeMarker } from './TimeMarker';
 import './GanttChart.css';
 
 interface GanttChartProps {
   schedule: Schedule;
-  onTaskClick?: (taskId: number) => void;
+  currentTime: Date;
+  onTaskComplete: (taskId: number) => void;
 }
 
-export function GanttChart({ schedule, onTaskClick }: GanttChartProps) {
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  // Update current time every minute
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentTime(new Date()), 60000);
-    return () => clearInterval(interval);
-  }, []);
+export function GanttChart({ schedule, currentTime, onTaskComplete }: GanttChartProps) {
+  const [hoveredDish, setHoveredDish] = useState<string | null>(null);
 
   const dinnerTime = useMemo(() => new Date(schedule.dinnerTime), [schedule.dinnerTime]);
 
@@ -38,7 +33,7 @@ export function GanttChart({ schedule, onTaskClick }: GanttChartProps) {
 
   // Group tasks by machine
   const tasksByMachine = useMemo(() => {
-    const grouped: Record<string, ScheduledTask[]> = {};
+    const grouped: Record<string, typeof schedule.scheduledTasks> = {};
     
     // Initialize with all machines from config
     schedule.machines.forEach(m => {
@@ -95,9 +90,6 @@ export function GanttChart({ schedule, onTaskClick }: GanttChartProps) {
               </div>
             );
           })}
-          <div className="dinner-time-label">
-            🍽️ Dinner
-          </div>
         </div>
       </div>
 
@@ -108,7 +100,9 @@ export function GanttChart({ schedule, onTaskClick }: GanttChartProps) {
             machineName={machine}
             tasks={tasks}
             timeRange={timeRange}
-            onTaskClick={onTaskClick}
+            hoveredDish={hoveredDish}
+            onHoverDish={setHoveredDish}
+            onMarkTaskComplete={onTaskComplete}
           />
         ))}
         
@@ -119,4 +113,3 @@ export function GanttChart({ schedule, onTaskClick }: GanttChartProps) {
     </div>
   );
 }
-

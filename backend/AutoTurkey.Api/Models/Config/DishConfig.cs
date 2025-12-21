@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace AutoTurkey.Api.Models.Config;
 
 public class DishConfig
@@ -8,10 +10,18 @@ public class DishConfig
     public List<ScheduledTaskConfig> ScheduledTasks { get; set; } = [];
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum PrepTaskWhen
+{
+    BeforeDay,
+    Morning
+}
+
 public class PrepTaskConfig
 {
     public string Name { get; set; } = "";
     public string? Description { get; set; }
+    public PrepTaskWhen When { get; set; } = PrepTaskWhen.Morning;
 }
 
 public class ScheduledTaskConfig
