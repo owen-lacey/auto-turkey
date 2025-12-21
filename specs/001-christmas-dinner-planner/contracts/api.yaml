@@ -1,0 +1,271 @@
+openapi: 3.0.3
+info:
+  title: Auto-Turkey API
+  description: Christmas Dinner Planner - Schedule optimization and task tracking
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000/api
+    description: Local development
+
+paths:
+  /config:
+    get:
+      summary: Get configuration (machines, dishes, dinner time)
+      description: Returns the current configuration loaded from dishes.json
+      operationId: getConfig
+      responses:
+        '200':
+          description: Configuration data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+
+  /schedule:
+    get:
+      summary: Get current schedule
+      description: Returns the most recent generated schedule with all tasks
+      operationId: getSchedule
+      responses:
+        '200':
+          description: Schedule with prep and scheduled tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleResponse'
+        '404':
+          description: No schedule generated yet
+
+    post:
+      summary: Generate new schedule
+      description: Runs the OR-Tools optimizer to create a new schedule
+      operationId: generateSchedule
+      responses:
+        '201':
+          description: Schedule generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleResponse'
+        '400':
+          description: Cannot generate schedule (invalid config)
+
+  /tasks/prep/{id}/complete:
+    post:
+      summary: Toggle prep task completion
+      operationId: togglePrepTaskComplete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task completion toggled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrepTask'
+        '404':
+          description: Task not found
+
+  /tasks/scheduled/{id}/complete:
+    post:
+      summary: Toggle scheduled task completion
+      operationId: toggleScheduledTaskComplete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task completion toggled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledTask'
+        '404':
+          description: Task not found
+
+components:
+  schemas:
+    ConfigResponse:
+      type: object
+      required:
+        - dinnerTime
+        - machines
+        - dishes
+      properties:
+        dinnerTime:
+          type: string
+          format: date-time
+          example: "2024-12-25T15:00:00Z"
+        machines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Machine'
+        dishes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DishConfig'
+
+    Machine:
+      type: object
+      required:
+        - name
+        - maxCapacity
+      properties:
+        name:
+          type: string
+          example: "Kitchen Oven"
+        maxCapacity:
+          type: integer
+          example: 1
+
+    DishConfig:
+      type: object
+      required:
+        - name
+        - prepTasks
+        - scheduledTasks
+      properties:
+        name:
+          type: string
+          example: "Turkey"
+        recipeUrl:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://example.com/turkey-recipe"
+        prepTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrepTaskConfig'
+        scheduledTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduledTaskConfig'
+
+    PrepTaskConfig:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "prep"
+        description:
+          type: string
+          nullable: true
+          example: "Remove giblets and pat dry"
+
+    ScheduledTaskConfig:
+      type: object
+      required:
+        - name
+        - durationMinutes
+      properties:
+        name:
+          type: string
+          example: "roast"
+        durationMinutes:
+          type: integer
+          example: 240
+        machine:
+          type: string
+          nullable: true
+          example: "Kitchen Oven"
+
+    ScheduleResponse:
+      type: object
+      required:
+        - id
+        - dinnerTime
+        - machines
+        - prepTasks
+        - scheduledTasks
+      properties:
+        id:
+          type: integer
+          example: 1
+        dinnerTime:
+          type: string
+          format: date-time
+        machines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Machine'
+        prepTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrepTask'
+        scheduledTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduledTask'
+
+    PrepTask:
+      type: object
+      required:
+        - id
+        - dishName
+        - taskName
+        - isComplete
+      properties:
+        id:
+          type: integer
+        dishName:
+          type: string
+          example: "Turkey"
+        taskName:
+          type: string
+          example: "prep"
+        description:
+          type: string
+          nullable: true
+        recipeUrl:
+          type: string
+          format: uri
+          nullable: true
+        isComplete:
+          type: boolean
+
+    ScheduledTask:
+      type: object
+      required:
+        - id
+        - dishName
+        - taskName
+        - startTime
+        - endTime
+        - isComplete
+      properties:
+        id:
+          type: integer
+        dishName:
+          type: string
+          example: "Turkey"
+        taskName:
+          type: string
+          example: "roast"
+        machineName:
+          type: string
+          nullable: true
+          example: "Kitchen Oven"
+        recipeUrl:
+          type: string
+          format: uri
+          nullable: true
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        isComplete:
+          type: boolean
+

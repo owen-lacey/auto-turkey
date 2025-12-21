@@ -1,0 +1,366 @@
+openapi: 3.0.3
+info:
+  title: Auto-Turkey API - Dinner Time Settings
+  description: API endpoints for managing user dinner time preferences
+  version: 2.0.0
+
+servers:
+  - url: http://localhost:5146/api
+    description: Local development server
+
+paths:
+  /settings/dinner-time:
+    get:
+      summary: Get saved dinner time
+      description: |
+        Returns the user's saved dinner time preference.
+        If no dinner time has been set, returns null.
+      operationId: getDinnerTime
+      responses:
+        '200':
+          description: Current dinner time setting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DinnerTimeResponse'
+              examples:
+                set:
+                  summary: Dinner time is set
+                  value:
+                    dinnerTime: "15:00"
+                notSet:
+                  summary: No dinner time set
+                  value:
+                    dinnerTime: null
+    
+    put:
+      summary: Set dinner time
+      description: |
+        Saves the user's preferred dinner time.
+        Time must be in 24-hour format (HH:mm).
+      operationId: setDinnerTime
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDinnerTimeRequest'
+            examples:
+              afternoon:
+                summary: 3 PM dinner
+                value:
+                  dinnerTime: "15:00"
+              evening:
+                summary: 6 PM dinner
+                value:
+                  dinnerTime: "18:00"
+      responses:
+        '200':
+          description: Dinner time saved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DinnerTimeResponse'
+        '400':
+          description: Invalid time format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Invalid time format. Expected HH:mm (e.g., 15:00)"
+    
+    delete:
+      summary: Clear dinner time
+      description: |
+        Removes the saved dinner time, reverting to calculated default.
+        After clearing, the system will use "now + cooking duration" as default.
+      operationId: clearDinnerTime
+      responses:
+        '204':
+          description: Dinner time cleared successfully
+
+  /schedule:
+    post:
+      summary: Generate schedule (updated)
+      description: |
+        Generates an optimized cooking schedule.
+        Now accepts optional dinnerTime in request body.
+        If not provided, uses saved setting or calculated default.
+      operationId: generateSchedule
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateScheduleRequest'
+            examples:
+              withTime:
+                summary: Specific dinner time
+                value:
+                  dinnerTime: "2025-12-25T15:00:00"
+              withoutTime:
+                summary: Use default/saved time
+                value: {}
+      responses:
+        '200':
+          description: Schedule generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleResponse'
+
+  /config:
+    get:
+      summary: Get configuration (updated)
+      description: |
+        Returns application configuration.
+        NOTE: dinnerTime is no longer included in response.
+      operationId: getConfig
+      responses:
+        '200':
+          description: Configuration data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigResponse'
+
+  /config/total-duration:
+    get:
+      summary: Get total cooking duration
+      description: |
+        Returns the total time needed to complete all dishes.
+        Used by frontend to calculate default dinner time.
+      operationId: getTotalDuration
+      responses:
+        '200':
+          description: Total cooking duration in minutes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TotalDurationResponse'
+              example:
+                totalMinutes: 210
+                formatted: "3h 30m"
+
+components:
+  schemas:
+    DinnerTimeResponse:
+      type: object
+      properties:
+        dinnerTime:
+          type: string
+          nullable: true
+          pattern: '^([01]?[0-9]|2[0-3]):[0-5][0-9]$'
+          description: Time in HH:mm format, or null if not set
+          example: "15:00"
+      required:
+        - dinnerTime
+    
+    SetDinnerTimeRequest:
+      type: object
+      properties:
+        dinnerTime:
+          type: string
+          pattern: '^([01]?[0-9]|2[0-3]):[0-5][0-9]$'
+          description: Time in HH:mm format
+          example: "15:00"
+      required:
+        - dinnerTime
+    
+    GenerateScheduleRequest:
+      type: object
+      properties:
+        dinnerTime:
+          type: string
+          format: date-time
+          description: Full datetime for dinner (ISO 8601)
+          example: "2025-12-25T15:00:00"
+    
+    TotalDurationResponse:
+      type: object
+      properties:
+        totalMinutes:
+          type: integer
+          description: Total cooking time in minutes
+          example: 210
+        formatted:
+          type: string
+          description: Human-readable duration
+          example: "3h 30m"
+      required:
+        - totalMinutes
+        - formatted
+    
+    ConfigResponse:
+      type: object
+      properties:
+        machines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Machine'
+        dishes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DishConfig'
+      required:
+        - machines
+        - dishes
+      description: Note - dinnerTime removed from this response
+    
+    Machine:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Kitchen Oven"
+        maxCapacity:
+          type: integer
+          example: 2
+      required:
+        - name
+        - maxCapacity
+    
+    DishConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Turkey"
+        recipeUrl:
+          type: string
+          nullable: true
+          example: "https://example.com/turkey-recipe"
+        prepTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrepTaskConfig'
+        scheduledTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduledTaskConfig'
+      required:
+        - name
+        - prepTasks
+        - scheduledTasks
+    
+    PrepTaskConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "prep"
+        description:
+          type: string
+          nullable: true
+          example: "Season turkey with butter and herbs"
+      required:
+        - name
+    
+    ScheduledTaskConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "roast"
+        durationMinutes:
+          type: integer
+          example: 180
+        machine:
+          type: string
+          nullable: true
+          example: "Kitchen Oven"
+      required:
+        - name
+        - durationMinutes
+    
+    ScheduleResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        dinnerTime:
+          type: string
+          format: date-time
+        machines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Machine'
+        prepTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrepTask'
+        scheduledTasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduledTask'
+      required:
+        - id
+        - dinnerTime
+        - machines
+        - prepTasks
+        - scheduledTasks
+    
+    PrepTask:
+      type: object
+      properties:
+        id:
+          type: integer
+        dishName:
+          type: string
+        taskName:
+          type: string
+        description:
+          type: string
+          nullable: true
+        recipeUrl:
+          type: string
+          nullable: true
+        isComplete:
+          type: boolean
+      required:
+        - id
+        - dishName
+        - taskName
+        - isComplete
+    
+    ScheduledTask:
+      type: object
+      properties:
+        id:
+          type: integer
+        dishName:
+          type: string
+        taskName:
+          type: string
+        machineName:
+          type: string
+          nullable: true
+        recipeUrl:
+          type: string
+          nullable: true
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        isComplete:
+          type: boolean
+      required:
+        - id
+        - dishName
+        - taskName
+        - startTime
+        - endTime
+        - isComplete
+    
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+      required:
+        - error
+
